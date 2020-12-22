@@ -81,6 +81,8 @@ def main():
             mask = model(mix)
             
             mask = torch.squeeze(mask)
+            mix = torch.squeeze(mix)
+            
             enhance = mask * mix
     
             loss = criterion(enhance, vocal)
@@ -98,9 +100,15 @@ def main():
             for vocal,mix in val_loader:
                 vocal = vocal[:,:512,:256].to(device)
                 mix = torch.unsqueeze(mix[:,:512,:256],1).to(device)
+                
                 mask = model(mix)
+                
                 mask = torch.squeeze(mask)
+                mix = torch.squeeze(mix)
+                
+                
                 enhance = mask * mix
+                                
                 loss = criterion(enhance, vocal)
                 eval_loss += loss.item()
             eval_loss /= len(val_loader)
